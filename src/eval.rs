@@ -72,8 +72,31 @@ pub fn run(ops: &[Op]) -> Context {
                 // ここを実装
                 // 次のような関数を定義して実装せよ
                 // eval_arith(&mut ctx, opcode, reg1, reg2, reg3);
-                // todo!()は削除すること
-                todo!()
+                match opcode {
+                    ArithOpcode::Add => {
+                        let n1 = ctx.get_reg(reg2);
+                        let n2 = ctx.get_reg(reg3);
+                        ctx.set_reg(reg1, n1 + n2);
+                    }
+                    ArithOpcode::Sub => {
+                        let n1 = ctx.get_reg(reg2);
+                        let n2 = ctx.get_reg(reg3);
+                        if n1 < n2 {
+                            panic!("u64 overflow, reg2 < reg3")
+                        }
+                        ctx.set_reg(reg1, n1 - n2);
+                    }
+                    ArithOpcode::Mul => {
+                        let n1 = ctx.get_reg(reg2);
+                        let n2 = ctx.get_reg(reg3);
+                        ctx.set_reg(reg1, n1 * n2);
+                    }
+                    ArithOpcode::Div => {
+                        let n1 = ctx.get_reg(reg2);
+                        let n2 = ctx.get_reg(reg3);
+                        ctx.set_reg(reg1, n1 / n2);
+                    }
+                }
             }
             Op::Branch(opcode, line) => {
                 if eval_branch(&ctx, opcode) {
@@ -89,9 +112,17 @@ pub fn run(ops: &[Op]) -> Context {
 
 /// 比較命令を実行
 fn eval_cmp(ctx: &mut Context, reg1: &Register, reg2: &Register) {
-    // ここを実装
-    // todo!()は削除すること
-    todo!()
+    let n1 = ctx.get_reg(reg1);
+    let n2 = ctx.get_reg(reg2);
+    if n1 == n2 {
+        ctx.cond = Condition::Eq;
+    }
+    if n1 > n2 {
+        ctx.cond = Condition::Gt;
+    }
+    if n1 < n2 {
+        ctx.cond = Condition::Lt;
+    }
 }
 
 /// mov命令を実行
