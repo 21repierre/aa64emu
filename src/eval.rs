@@ -81,9 +81,6 @@ pub fn run(ops: &[Op]) -> Context {
                     ArithOpcode::Sub => {
                         let n1 = ctx.get_reg(reg2);
                         let n2 = ctx.get_reg(reg3);
-                        if n1 < n2 {
-                            panic!("u64 overflow, reg2 < reg3")
-                        }
                         ctx.set_reg(reg1, n1 - n2);
                     }
                     ArithOpcode::Mul => {
